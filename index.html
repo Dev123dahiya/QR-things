@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mb-3">QR Code Generator</h2>
+        <input type="text" id="text" class="form-control" placeholder="Enter text or URL">
+        <button class="btn btn-primary mt-3" onclick="generateQR()">Generate QR Code</button>
+        <div id="qrcode"></div>
+        <button class="btn btn-success mt-3" id="download" style="display:none;">Download QR</button>
+    </div>
+    
+    <script>
+        function generateQR() {
+            let qrDiv = document.getElementById("qrcode");
+            qrDiv.innerHTML = "";
+            let text = document.getElementById("text").value;
+            if (text.trim() === "") {
+                alert("Please enter text or URL");
+                return;
+            }
+            let qr = new QRCode(qrDiv, {
+                text: text,
+                width: 200,
+                height: 200
+            });
+            
+            setTimeout(() => {
+                let qrCanvas = qrDiv.getElementsByTagName("canvas")[0];
+                let qrImg = qrCanvas.toDataURL("image/png");
+                let downloadBtn = document.getElementById("download");
+                downloadBtn.style.display = "block";
+                downloadBtn.onclick = function () {
+                    let link = document.createElement("a");
+                    link.href = qrImg;
+                    link.download = "qrcode.png";
+                    link.click();
+                };
+            }, 500);
+        }
+    </script>
+</body>
+</html>
